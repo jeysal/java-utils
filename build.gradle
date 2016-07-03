@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'maven'
+    id 'jacoco'
+}
+
+group = 'com.github.jeysal'
+version = ['git', 'describe', '--tags'].execute([], projectDir).inputStream.text.trim()
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Dependencies
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // Misc
+    compileOnly 'org.projectlombok:lombok:1.16.8'
+
+    // Test
+    testCompile 'junit:junit:4.12' // For test execution
+    testCompile 'org.junit:junit5-api:5.0.0-ALPHA' // For Assertions
+}
+
+// Code coverage
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport
+
+// Artifacts
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourceJar
+    archives javadocJar
+}
