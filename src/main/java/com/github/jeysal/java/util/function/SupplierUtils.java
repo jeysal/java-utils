@@ -49,4 +49,21 @@ public class SupplierUtils {
                 ).get();
     }
 
+    /**
+     * Returns a {@link Supplier} that delegates calls to given throwingSupplier and returns an {@link Optional} of the
+     * result or an empty {@link Optional} if given throwingSupplier returned null or threw an {@link Exception}.
+     *
+     * @param throwingSupplier The {@link Supplier} to delegate to
+     * @param <R>              The return type of the {@link Supplier}
+     * @return The {@link Supplier} that delegates calls to throwingSupplier
+     */
+    public static <R> Supplier<Optional<R>> trying(ThrowingSupplier<R, ?> throwingSupplier) {
+        return () -> {
+            try {
+                return Optional.ofNullable(throwingSupplier.get());
+            } catch (Exception e) {
+                return Optional.empty();
+            }
+        };
+    }
 }
