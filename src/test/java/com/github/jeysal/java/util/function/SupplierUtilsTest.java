@@ -83,4 +83,31 @@ public class SupplierUtilsTest {
         ).get();
     }
 
+
+    @Test
+    public void testTrying() {
+        assertEquals(Optional.of(1),
+                SupplierUtils.trying(
+                        () -> 1
+                ).get()
+        );
+    }
+
+    @Test
+    public void testTryingThrows() {
+        assertEquals(Optional.empty(),
+                SupplierUtils.trying(() -> {
+                    throw new Exception();
+                }).get()
+        );
+    }
+
+    @Test
+    public void testTryingNull() {
+        assertEquals(Optional.empty(),
+                SupplierUtils.trying(
+                        () -> null
+                ).get()
+        );
+    }
 }
