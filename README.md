@@ -2,6 +2,7 @@
 
 [![Build status](https://img.shields.io/travis/jeysal/java-utils.svg?style=flat-square)](https://travis-ci.org/jeysal/java-utils)
 [![Code coverage](https://img.shields.io/codecov/c/github/jeysal/java-utils.svg?style=flat-square)](https://codecov.io/gh/jeysal/java-utils)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/jeysal/java-utils)
 
 A small collection of Java utility classes to complement the ones provided by the java.util package.
 
