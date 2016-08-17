@@ -7,7 +7,7 @@ A small collection of Java utility classes to complement the ones provided by th
 
 Meant to grow over time as new general-purpose utility methods required by other projects are added.
 
-## Usage
+## Installation
 
 You can retrieve the artifacts from the jitpack.io repository.
 Add the following repository and dependency to your Gradle or Maven build config.
