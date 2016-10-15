@@ -71,4 +71,20 @@ public class FunctionUtils {
         };
     }
 
+    public static <T, R> Function<T, R> rethrowing(ThrowingFunction<T, R, ?> throwingFunction) {
+        return rethrowing(throwingFunction, RuntimeException::new);
+    }
+
+    public static <T, R> Function<T, R> rethrowing(
+            ThrowingFunction<T, R, ?> throwingFunction,
+            Function<Exception, ? extends RuntimeException> exceptionMapper) {
+        return t -> {
+            try {
+                return throwingFunction.apply(t);
+            } catch (Exception e) {
+                throw exceptionMapper.apply(e);
+            }
+        };
+    }
+
 }
