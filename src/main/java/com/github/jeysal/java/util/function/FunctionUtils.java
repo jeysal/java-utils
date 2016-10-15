@@ -71,10 +71,35 @@ public class FunctionUtils {
         };
     }
 
+    /**
+     * Returns a {@link Function} that delegates calls to given throwingFunction and throws a new
+     * {@link RuntimeException} if given throwingFunction threw an {@link Exception}.<br>
+     * The {@link RuntimeException} has the original {@link Exception} as its {@link Throwable#getCause() cause}.
+     *
+     * @param throwingFunction The {@link Function} to delegate to
+     * @param <T>              The parameter type of the {@link Function}
+     * @param <R>              The return type of the {@link Function}
+     * @return The {@link Function} that delegates calls to throwingFunction
+     */
     public static <T, R> Function<T, R> rethrowing(ThrowingFunction<T, R, ?> throwingFunction) {
         return rethrowing(throwingFunction, RuntimeException::new);
     }
 
+    /**
+     * Returns a {@link Function} that delegates calls to given throwingFunction and throws a {@link RuntimeException}
+     * created by given exceptionMapper if given throwingFunction threw an {@link Exception}.<br>
+     * The original {@link Exception} is passed as the argument to given exceptionMapper.
+     * <p>
+     * <b>Example:</b><br>
+     * {@code rethrowing(o -> { throw new Exception("example"); }, IllegalArgumentException::new)}
+     * </p>
+     *
+     * @param throwingFunction The {@link Function} to delegate to
+     * @param exceptionMapper  The original {@link Exception} to rethrown {@link RuntimeException} mapper
+     * @param <T>              The parameter type of the {@link Function}
+     * @param <R>              The return type of the {@link Function}
+     * @return The {@link Function} that delegates calls to throwingFunction
+     */
     public static <T, R> Function<T, R> rethrowing(
             ThrowingFunction<T, R, ?> throwingFunction,
             Function<Exception, ? extends RuntimeException> exceptionMapper) {
