@@ -68,10 +68,33 @@ public class SupplierUtils {
         };
     }
 
+    /**
+     * Returns a {@link Supplier} that delegates calls to given throwingSupplier and throws a new
+     * {@link RuntimeException} if given throwingSupplier threw an {@link Exception}.<br>
+     * The {@link RuntimeException} has the original {@link Exception} as its {@link Throwable#getCause() cause}.
+     *
+     * @param throwingSupplier The {@link Supplier} to delegate to
+     * @param <R>              The return type of the {@link Supplier}
+     * @return The {@link Supplier} that delegates calls to throwingSupplier
+     */
     public static <R> Supplier<R> rethrowing(ThrowingSupplier<R, ?> throwingSupplier) {
         return rethrowing(throwingSupplier, RuntimeException::new);
     }
 
+    /**
+     * Returns a {@link Supplier} that delegates calls to given throwingSupplier and throws a {@link RuntimeException}
+     * created by given exceptionMapper if given throwingSupplier threw an {@link Exception}.<br>
+     * The original {@link Exception} is passed as the argument to given exceptionMapper.
+     * <p>
+     * <b>Example:</b><br>
+     * {@code rethrowing(() -> { throw new Exception("example"); }, IllegalArgumentException::new)}
+     * </p>
+     *
+     * @param throwingSupplier The {@link Supplier} to delegate to
+     * @param exceptionMapper  The original {@link Exception} to rethrown {@link RuntimeException} mapper
+     * @param <R>              The return type of the {@link Supplier}
+     * @return The {@link Supplier} that delegates calls to throwingSupplier
+     */
     public static <R> Supplier<R> rethrowing(
             ThrowingSupplier<R, ?> throwingSupplier,
             Function<Exception, ? extends RuntimeException> exceptionMapper) {
