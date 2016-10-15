@@ -5,9 +5,9 @@ import org.junit.Test;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.github.jeysal.java.util.function.SupplierUtils.firstPresent;
-import static com.github.jeysal.java.util.function.SupplierUtils.trying;
+import static com.github.jeysal.java.util.function.SupplierUtils.*;
 import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.fail;
 
 /**
  * @author Tim Seckinger
@@ -112,4 +112,46 @@ public class SupplierUtilsTest {
                 ).get()
         );
     }
+
+    @Test
+    public void testRethrowing() {
+        assertEquals(1,
+                rethrowing(
+                        () -> 1
+                ).get()
+        );
+    }
+
+    @Test
+    public void testRethrowingThrows() {
+        try {
+            rethrowing(() -> {
+                throw new Exception("asdf");
+            }).get();
+        } catch (RuntimeException e) {
+            assertEquals(RuntimeException.class, e.getClass());
+            assertEquals(Exception.class, e.getCause().getClass());
+            assertEquals("asdf", e.getCause().getMessage());
+            return;
+        }
+
+        fail("Rethrowing supplier did not throw");
+    }
+
+    @Test
+    public void testRethrowingMapper() {
+        try {
+            rethrowing(() -> {
+                throw new Exception("asdf");
+            }, IllegalArgumentException::new).get();
+        } catch (RuntimeException e) {
+            assertEquals(IllegalArgumentException.class, e.getClass());
+            assertEquals(Exception.class, e.getCause().getClass());
+            assertEquals("asdf", e.getCause().getMessage());
+            return;
+        }
+
+        fail("Rethrowing supplier did not throw");
+    }
+
 }
