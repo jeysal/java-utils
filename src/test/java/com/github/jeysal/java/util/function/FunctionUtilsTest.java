@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.fail;
 
 /**
  * @author Tim Seckinger
@@ -109,6 +110,47 @@ public class FunctionUtilsTest {
                         o -> null
                 ).apply(null)
         );
+    }
+
+    @Test
+    public void testRethrowing() {
+        assertEquals(1,
+                FunctionUtils.rethrowing(
+                        o -> 1
+                ).apply(null)
+        );
+    }
+
+    @Test
+    public void testRethrowingThrows() {
+        try {
+            FunctionUtils.rethrowing(o -> {
+                throw new Exception("asdf");
+            }).apply(null);
+        } catch (RuntimeException e) {
+            assertEquals(RuntimeException.class, e.getClass());
+            assertEquals(Exception.class, e.getCause().getClass());
+            assertEquals("asdf", e.getCause().getMessage());
+            return;
+        }
+
+        fail("Rethrowing function did not throw");
+    }
+
+    @Test
+    public void testRethrowingMapper() {
+        try {
+            FunctionUtils.rethrowing(o -> {
+                throw new Exception("asdf");
+            }, IllegalArgumentException::new).apply(null);
+        } catch (RuntimeException e) {
+            assertEquals(IllegalArgumentException.class, e.getClass());
+            assertEquals(Exception.class, e.getCause().getClass());
+            assertEquals("asdf", e.getCause().getMessage());
+            return;
+        }
+
+        fail("Rethrowing function did not throw");
     }
 
 }
