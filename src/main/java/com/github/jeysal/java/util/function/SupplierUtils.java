@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -66,4 +67,21 @@ public class SupplierUtils {
             }
         };
     }
+
+    public static <R> Supplier<R> rethrowing(ThrowingSupplier<R, ?> throwingSupplier) {
+        return rethrowing(throwingSupplier, RuntimeException::new);
+    }
+
+    public static <R> Supplier<R> rethrowing(
+            ThrowingSupplier<R, ?> throwingSupplier,
+            Function<Exception, ? extends RuntimeException> exceptionMapper) {
+        return () -> {
+            try {
+                return throwingSupplier.get();
+            } catch (Exception e) {
+                throw exceptionMapper.apply(e);
+            }
+        };
+    }
+
 }
